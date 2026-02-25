@@ -1,0 +1,40 @@
+{
+  "post_id": "workspace_cinematic_002",
+  "publish_to": ["youtube"],
+
+  "youtube": {
+    "title": "My Creative Workspace | A Cinematic Desk Setup for Deep Work",
+    "description": "This is where ideas turn into films.\n\nIn this video, I walk you through my creative workspace — the desk, lighting, tools, and small details that help me think clearly and create better.\n\n00:00 Intro\n00:45 Desk Overview\n02:10 Lighting Setup\n03:40 Filmmaking Tools\n05:10 Final Cinematic Shots\n\nIf you enjoy thoughtful and minimal creative content, consider subscribing.\n\n#workspace #filmmaking #creativity",
+
+    "tags": [
+      "creative workspace",
+      "desk setup",
+      "filmmaking setup",
+      "workspace tour",
+      "cinematic desk",
+      "deep work setup",
+      "minimal workspace",
+      "creative productivity",
+      "youtube creator setup",
+      "workspace inspiration"
+    ],
+
+    "category": "22",
+    "privacy": "private",
+    "publish_at": null,
+
+    "default_language": "en",
+    "default_audio_language": "en",
+
+    "made_for_kids": false,
+    "license": "youtube",
+    "embeddable": true,
+    "public_stats_viewable": true,
+    "notify_subscribers": true,
+
+    "playlists": null,
+    "use_custom_thumbnail": false,
+
+    "pinned_comment": "Which part of this workspace inspires you the most? Let me know below."
+  }
+}

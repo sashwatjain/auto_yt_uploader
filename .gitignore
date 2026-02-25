@@ -1,0 +1,80 @@
+# ==============================
+# 🔐 Credentials & Secrets
+# ==============================
+credentials/
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ==============================
+# 📦 Virtual Environment
+# ==============================
+venv/
+.venv/
+env/
+ENV/
+
+# ==============================
+# 🐍 Python Cache
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==============================
+# 📊 Logs
+# ==============================
+logs/
+*.log
+
+# ==============================
+# 📂 Processed & Generated Files
+# ==============================
+posts/*
+output/
+*.xlsx
+
+# ==============================
+# 🖼 Media Files (Optional)
+# Uncomment if you don't want raw media in repo
+# ==============================
+# posts/*/video.mp4
+# posts/*/thumbnails/
+
+# ==============================
+# 🧪 IDE & Editor
+# ==============================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==============================
+# 🖥 OS Files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
+# 🔥 Streamlit
+# ==============================
+.streamlit/
+
+# ==============================
+# 🧾 Coverage & Testing
+# ==============================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ==============================
+# 🚀 Build / Distribution
+# ==============================
+dist/
+build/
+*.egg-info/
+
+credentials/

@@ -1,0 +1,7 @@
+YOUTUBE_THUMBNAIL_MAX_MB = 2
+YOUTUBE_THUMBNAIL_MAX_BYTES = YOUTUBE_THUMBNAIL_MAX_MB * 1024 * 1024
+
+SUPPORTED_VIDEO_FORMATS = [".mp4", ".mov"]
+SUPPORTED_IMAGE_FORMATS = [".jpg", ".jpeg", ".png"]
+
+EXCEL_FILE = "output/publishing_history.xlsx"
