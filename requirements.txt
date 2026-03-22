@@ -6,3 +6,4 @@ pillow
 openpyxl
 streamlit
 tqdm
+pandas

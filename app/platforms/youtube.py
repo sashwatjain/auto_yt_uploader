@@ -4,8 +4,7 @@ from googleapiclient.http import MediaFileUpload
 from app.services.auth_manager import get_youtube_credentials
 
 SCOPES = [
-    "https://www.googleapis.com/auth/youtube",
-    "https://www.googleapis.com/auth/youtube.force-ssl"
+    "https://www.googleapis.com/auth/youtube"
 ]
 
 
@@ -18,11 +17,15 @@ class YouTubePlatform:
         self.service = None
 
     def authenticate(self):
-        creds = get_youtube_credentials(
-            self.credentials_path,
-            self.token_path
-        )
-        self.service = build("youtube", "v3", credentials=creds)
+        try:
+            creds = get_youtube_credentials(
+                self.credentials_path,
+                self.token_path
+            )
+            self.service = build("youtube", "v3", credentials=creds)
+        except Exception as e:
+            print("Authentication failed" + str(e))
+            raise e    
 
     # -------------------------------------------------
     # VIDEO UPLOAD (FULL FEATURE SUPPORT)

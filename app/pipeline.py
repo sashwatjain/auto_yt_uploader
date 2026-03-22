@@ -66,7 +66,13 @@ def run_pipeline(folder_path, credentials_path, platforms, skip_validation, step
     #     # STEP 7
     update("Logging to Excel", "running")
     video_url = f"https://youtube.com/watch?v={video_id}"
-    log_to_excel(post.metadata["post_id"], "YouTube", "Success", video_url)
+    log_to_excel(
+        post_id=post.metadata["post_id"],
+        platform="YouTube",
+        status="Success",
+        url=video_url,
+        metadata=yt_metadata
+    )
     update("Logging to Excel", "done")
 
     return video_url

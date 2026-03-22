@@ -8,6 +8,8 @@ if ROOT_DIR not in sys.path:
 
 import streamlit as st
 from app.pipeline import run_pipeline
+  # Log special status instead of Success
+from app.services.excel_logger import log_to_excel
 
 st.set_page_config(page_title="Auto Video Publisher", layout="wide")
 st.title("🚀 Auto Video Publisher")
@@ -38,16 +40,92 @@ if not os.path.exists(posts_root):
 # ---------------------------
 # DETECT POST FOLDERS
 # ---------------------------
-all_post_folders = [
-    str(p)
-    for p in Path(posts_root).iterdir()
-    if p.is_dir()
-]
+import pandas as pd
+from datetime import datetime
 
-selected_folders = st.multiselect(
+UPLOAD_LOG_PATH = r"E:\Github\auto_yt_uploader\output\publishing_history.xlsx"
+
+
+def extract_post_id_from_folder(folder_name):
+    parts = folder_name.split("_", 2)
+    if len(parts) >= 3:
+        return parts[2]
+    return None
+
+
+def extract_datetime_from_folder(folder_name):
+    try:
+        date_part, time_part, _ = folder_name.split("_", 2)
+        dt_str = f"{date_part} {time_part.replace('-', ':')}"
+        return datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
+    except Exception:
+        return datetime.min
+
+
+
+# LOAD SUCCESSFULLY UPLOADED POST IDs
+
+processed_ids = set()
+
+if os.path.exists(UPLOAD_LOG_PATH):
+    try:
+        df = pd.read_excel(UPLOAD_LOG_PATH)
+
+        # Only hide posts that were successfully uploaded
+        if {"Post ID", "Status"}.issubset(df.columns):
+            success_df = df[df["Status"] == "Success"]
+            processed_ids = set(
+                success_df["Post ID"].dropna().astype(str)
+            )
+
+    except Exception:
+        # If Excel is corrupted or open, don't block UI
+        processed_ids = set()
+
+# DETECT NEW POST FOLDERS
+
+all_folders = []
+
+for p in Path(posts_root).iterdir():
+    if p.is_dir():
+        folder_name = p.name
+        post_id = extract_post_id_from_folder(folder_name)
+
+        # Show only folders not successfully uploaded
+        if post_id and post_id not in processed_ids:
+            folder_dt = extract_datetime_from_folder(folder_name)
+            all_folders.append((p.name, str(p), folder_dt))
+
+# SORT NEWEST FIRST
+
+all_folders_sorted = sorted(
+    all_folders,
+    key=lambda x: x[2],
+    # reverse=True
+)
+
+# CLEAN UI DISPLAY
+
+folder_name_map = {
+    name: full_path
+    for name, full_path, _ in all_folders_sorted
+}
+
+all_post_folders = list(folder_name_map.keys())
+
+if not all_post_folders:
+    st.info("No new posts to publish 🎉")
+    st.stop()
+
+selected_folder_names = st.multiselect(
     "Select Post Folders to Process",
     all_post_folders
 )
+
+selected_folders = [
+    folder_name_map[name]
+    for name in selected_folder_names
+]
 
 # ---------------------------
 # PLATFORM SELECTION
@@ -147,9 +225,29 @@ if st.session_state.start_batch and selected_folders:
             st.success(f"🎉 Done: {url}")
 
         except Exception as e:
-            st.error(f"Failed: {folder}")
-            st.error(str(e))
+            error_message = str(e)
+
+            # Detect YouTube daily upload limit
+            if "uploadLimitExceeded" in error_message:
+                st.warning("⚠ Daily YouTube upload limit reached.")
+                st.warning("Uploads will be available again in ~24 hours.")
+
+
+                post_id = Path(folder).name.split("_", 2)[2]
+
+                log_to_excel(
+                    post_id=post_id,
+                    platform="YouTube",
+                    status="LimitReached",
+                    url="N/A",
+                    metadata=None
+                )
+
+                break  # Stop processing remaining folders
+
+            else:
+                st.error(f"Failed: {folder}")
+                st.error(error_message)
 
     st.session_state.start_batch = False
     st.session_state.confirmed = False
-
